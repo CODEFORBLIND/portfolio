@@ -118,9 +118,3 @@ git commit -m "Add project README"
 git push origin main
 
 ```
-
-*(Verification: Refresh your GitHub repository page and confirm `README.md` renders below the file list.)*
-
-<FollowUp label="Want me to explain how to deploy this portfolio to Vercel next?" query="Yes, explain how to deploy this portfolio to Vercel from GitHub."/>
-
-```

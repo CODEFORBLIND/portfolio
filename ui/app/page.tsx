@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   motion,
   useScroll,
@@ -401,6 +401,101 @@ function ContactNode() {
   );
 }
 
+const TITLES = [
+  "AI/ML ENGINEER",
+  "AGENTIC WOKFLOWS"
+];
+
+function TypewriterSubtitle() {
+  const [text, setText] = useState("");
+  const [titleIndex, setTitleIndex] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    const currentTitle = TITLES[titleIndex];
+    const typeSpeed = isDeleting ? 40 : 120;
+    
+    // Pause longer when the word is fully typed, and a short pause when fully deleted
+    const delay = text === currentTitle && !isDeleting ? 2500 : 
+                  text === "" && isDeleting ? 400 : typeSpeed;
+
+    const timeout = setTimeout(() => {
+      if (!isDeleting && text === currentTitle) {
+        setIsDeleting(true);
+      } else if (isDeleting && text === "") {
+        setIsDeleting(false);
+        setTitleIndex((prev) => (prev + 1) % TITLES.length);
+      } else {
+        setText(currentTitle.substring(0, text.length + (isDeleting ? -1 : 1)));
+      }
+    }, delay);
+
+    return () => clearTimeout(timeout);
+  }, [text, isDeleting, titleIndex]);
+
+  return (
+    <div className="mt-4 flex min-h-[1.5rem] items-center justify-center font-mono text-sm uppercase tracking-[0.3em] text-cyan-200/80 sm:text-base">
+      <span>{text}</span>
+      <motion.span
+        animate={{ opacity: [1, 0, 1] }}
+        transition={{ repeat: Infinity, duration: 0.8, ease: "linear" }}
+        className="ml-2 inline-block h-4 w-2 bg-cyan-400"
+      />
+    </div>
+  );
+}
+
+function DataDust() {
+  const [particles, setParticles] = useState<Array<{
+    id: number;
+    left: string;
+    top: string;
+    delay: number;
+    duration: number;
+    opacity: number;
+  }>>([]);
+
+  useEffect(() => {
+    setParticles(
+      Array.from({ length: 40 }).map(() => ({
+        id: Math.random(),
+        left: `${Math.random() * 100}%`,
+        top: `${Math.random() * 100}%`,
+        // 1. Reduced max delay from 5s to 0.5s so they spawn immediately
+        delay: Math.random() * 0.5, 
+        // 2. Reduced duration from 10-30s to 4-12s so the fade-in is much faster
+        duration: 4 + Math.random() * 8, 
+        opacity: 0.1 + Math.random() * 0.4,
+      }))
+    );
+  }, []);
+
+  if (particles.length === 0) return null;
+
+  return (
+    <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden" aria-hidden>
+      {particles.map((p) => (
+        <motion.div
+          key={p.id}
+          initial={{ y: 0, opacity: 0 }}
+          animate={{
+            y: [0, -40, 0],
+            opacity: [0, p.opacity, 0],
+          }}
+          transition={{
+            duration: p.duration,
+            repeat: Infinity,
+            delay: p.delay,
+            ease: "easeInOut",
+          }}
+          className="absolute h-1.5 w-1.5 rounded-full bg-cyan-400 shadow-[0_0_10px_rgba(34,211,238,0.8)]"
+          style={{ left: p.left, top: p.top }}
+        />
+      ))}
+    </div>
+  );
+}
+
 // ---- Page -------------------------------------------------------------------
 export default function Page() {
   const { scrollY } = useScroll();
@@ -426,34 +521,90 @@ export default function Page() {
 
       <main className="relative z-10 text-slate-200">
         {/* ---- Section 1: The Root ---- */}
-        <section className="relative flex h-screen items-center justify-center px-6">
+        <DataDust />
+        
+        <section className="relative flex h-screen items-center justify-center px-6 overflow-hidden">
+          
+          {/* Step 3: HUD Framing */}
+          <motion.div 
+            style={{ opacity: heroOpacity }}
+            className="pointer-events-none absolute inset-6 z-20 hidden font-mono text-[10px] uppercase tracking-[0.3em] text-cyan-500/50 md:block"
+          >
+            <div className="absolute left-0 top-0 flex flex-col gap-1">
+              <span>SYS.INIT // v2.0.26</span>
+              <span>AUTH: C.J.</span>
+            </div>
+            <div className="absolute right-0 top-0 flex items-center gap-2 text-right">
+              <span>STATUS: ONLINE</span>
+              <span className="h-1.5 w-1.5 animate-pulse rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
+            </div>
+            <div className="absolute bottom-0 left-0">
+              <span>LOC: 18.5204° N, 73.8567° E [PUNE]</span>
+            </div>
+            <div className="absolute bottom-0 right-0 text-right">
+              <span className="animate-pulse">AWAITING_INPUT_</span>
+            </div>
+          </motion.div>
+
+          {/* Radial Blueprint Grid & Data Dust */}
+          <motion.div 
+            style={{ opacity: heroOpacity }}
+            className="pointer-events-none absolute inset-0 z-0"
+          >
+            
+            <div 
+              className="absolute inset-0"
+              style={{
+                backgroundImage: `
+                  linear-gradient(to right, rgba(34, 211, 238, 0.07) 1px, transparent 1px),
+                  linear-gradient(to bottom, rgba(34, 211, 238, 0.07) 1px, transparent 1px)
+                `,
+                backgroundSize: '32px 32px',
+                maskImage: 'radial-gradient(circle at center, black 10%, transparent 60%)',
+                WebkitMaskImage: 'radial-gradient(circle at center, black 10%, transparent 60%)',
+              }}
+              aria-hidden
+            />
+          </motion.div>
+
           <motion.div
             style={{ opacity: heroOpacity, y: heroY, scale: heroScale }}
-            className="text-center"
+            className="relative z-10 text-center"
           >
             <h1 className="bg-gradient-to-r from-cyan-200 via-cyan-400 to-teal-500 bg-clip-text pb-2 text-5xl font-bold tracking-tight text-transparent sm:text-7xl md:text-8xl">
               Chelsi Jain
             </h1>
-            <p className="mt-4 font-mono text-sm uppercase tracking-[0.3em] text-cyan-200/80 sm:text-base">
-              AI/ML ENGINEER • AGENTIC WORKFLOWS
-            </p>
+            <TypewriterSubtitle />
           </motion.div>
 
+          {/* Enhanced "Neural Link" Scroll Indicator */}
           <motion.div
             style={{ opacity: hintOpacity }}
-            className="absolute bottom-10 flex flex-col items-center gap-2 font-mono text-[11px] uppercase tracking-[0.3em] text-cyan-300/60"
+            className="absolute bottom-8 flex flex-col items-center gap-3"
           >
-            <span>Scroll to grow the network</span>
-            <motion.span
-              animate={{ y: [0, 6, 0] }}
-              transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-              aria-hidden
-            >
-              ↓
-            </motion.span>
+            <span className="font-mono text-[10px] uppercase tracking-[0.3em] text-cyan-400/60">
+              Scroll to connect
+            </span>
+            
+            <div className="flex flex-col items-center">
+              {/* Mouse Outline */}
+              <div className="flex h-8 w-5 justify-center rounded-full border border-cyan-500/40 p-1">
+                {/* Scrolling Wheel */}
+                <motion.div
+                  animate={{ y: [0, 10, 0], opacity: [1, 0, 1] }}
+                  transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                  className="h-1.5 w-1 rounded-full bg-cyan-300 shadow-[0_0_8px_rgba(34,211,238,0.8)]"
+                />
+              </div>
+              {/* Downward Energy Line */}
+              <motion.div
+                animate={{ height: ["0rem", "3rem", "0rem"], opacity: [0, 1, 0] }}
+                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
+                className="mt-2 w-px bg-gradient-to-b from-cyan-400 to-transparent"
+              />
+            </div>
           </motion.div>
         </section>
-
         {/* ---- Section 2: The Neural Pathways ---- */}
         <section
           ref={timelineRef}

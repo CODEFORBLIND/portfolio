@@ -6,6 +6,7 @@ import {
   useScroll,
   useSpring,
   useTransform,
+  AnimatePresence,
   type Variants,
 } from "framer-motion";
 import CanvasNCA from "./components/CanvasNCA";
@@ -331,14 +332,14 @@ function ContactNode() {
         transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
         className="relative w-full max-w-lg rounded-2xl border border-cyan-500/40 bg-black/50 p-8 text-center shadow-[0_0_50px_-10px_rgba(34,211,238,0.25)] backdrop-blur-md"
       >
-        <h2 className="mb-2 text-2xl font-bold text-white">Open a Connection</h2>
+        <h2 className="mb-2 text-2xl font-bold text-white">Establish Connection</h2>
         <p className="mb-8 font-mono text-sm text-cyan-200/80">
-          Ready to build intelligent systems? Let's talk.
+          Available to architect scalable AI solutions, multi-agent workflows, and robust software systems.
         </p>
 
         <div className="flex flex-col items-center gap-4">
           <a
-            href="chelsimanishjain@gmail.com"
+            href="mailto:chelsimanishjain@gmail.com"
             className="group flex w-full max-w-sm items-center justify-between rounded-lg border border-cyan-900/50 bg-cyan-950/30 p-3 transition-colors hover:border-cyan-500/50 hover:bg-cyan-900/40"
           >
             <span className="font-mono text-sm text-cyan-100">chelsimanishjain@gmail.com</span>
@@ -403,7 +404,7 @@ function ContactNode() {
 
 const TITLES = [
   "AI/ML ENGINEER",
-  "AGENTIC WOKFLOWS"
+  "AGENTIC WORKFLOWS"
 ];
 
 function TypewriterSubtitle() {
@@ -461,10 +462,8 @@ function DataDust() {
         id: Math.random(),
         left: `${Math.random() * 100}%`,
         top: `${Math.random() * 100}%`,
-        // 1. Reduced max delay from 5s to 0.5s so they spawn immediately
-        delay: Math.random() * 0.5, 
-        // 2. Reduced duration from 10-30s to 4-12s so the fade-in is much faster
-        duration: 4 + Math.random() * 8, 
+        delay: Math.random() * 0.5,
+        duration: 4 + Math.random() * 8,
         opacity: 0.1 + Math.random() * 0.4,
       }))
     );
@@ -496,6 +495,66 @@ function DataDust() {
   );
 }
 
+// ---- The Boot Loader Component ----
+function BootLoader() {
+  const [step, setStep] = useState(0);
+
+  // Sequence the terminal log lines
+  useEffect(() => {
+    const t1 = setTimeout(() => setStep(1), 600);
+    const t2 = setTimeout(() => setStep(2), 1200);
+    const t3 = setTimeout(() => setStep(3), 1800);
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); };
+  }, []);
+
+  return (
+    <motion.div
+      initial={{ opacity: 1 }}
+      exit={{ opacity: 0, transition: { duration: 0.8, ease: "easeInOut" } }}
+      // CHANGED: bg-[#020617] is now bg-[#05070d] to perfectly match the canvas
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-[#05070d]"
+    >
+      {/* 1. The Seeding Pixel */}
+      <div className="relative flex h-32 w-32 items-center justify-center">
+        <motion.div
+          animate={{ scale: [1, 1.5, 1], opacity: [0.5, 1, 0.5] }}
+          transition={{ duration: 1, repeat: Infinity }}
+          className="h-1.5 w-1.5 bg-cyan-400 shadow-[0_0_15px_3px_rgba(34,211,238,0.8)]"
+        />
+        
+        {/* Tiny neural sprouts when initialization finishes */}
+        {step >= 3 && (
+          <>
+            <motion.div initial={{ height: 0 }} animate={{ height: 24 }} className="absolute bottom-1/2 mb-2 w-px bg-cyan-500/60" />
+            <motion.div initial={{ height: 0 }} animate={{ height: 24 }} className="absolute top-1/2 mt-2 w-px bg-cyan-500/60" />
+            <motion.div initial={{ width: 0 }} animate={{ width: 24 }} className="absolute right-1/2 mr-2 h-px bg-cyan-500/60" />
+            <motion.div initial={{ width: 0 }} animate={{ width: 24 }} className="absolute left-1/2 ml-2 h-px bg-cyan-500/60" />
+          </>
+        )}
+      </div>
+
+      {/* 2. Terminal Boot Log */}
+      <div className="mt-8 flex h-24 w-72 flex-col font-mono text-[10px] text-cyan-500/70 uppercase tracking-widest">
+        {step >= 1 && (
+          <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            &gt; initializing ONNX WASM runtime... [OK]
+          </motion.span>
+        )}
+        {step >= 2 && (
+          <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            &gt; fetching neural weights... [OK]
+          </motion.span>
+        )}
+        {step >= 3 && (
+          <motion.span initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
+            &gt; seeding root matrix (32, 12)... <span className="animate-pulse text-cyan-300">_</span>
+          </motion.span>
+        )}
+      </div>
+    </motion.div>
+  );
+}
+
 // ---- Page -------------------------------------------------------------------
 export default function Page() {
   const { scrollY } = useScroll();
@@ -515,17 +574,54 @@ export default function Page() {
     mass: 0.4,
   });
 
+  // ---- Loader State Management ----
+  const [modelReady, setModelReady] = useState(false);
+  const [minTimePassed, setMinTimePassed] = useState(false);
+  const [forceUnlock, setForceUnlock] = useState(false);
+
+  useEffect(() => {
+    // Ensure the user sees the cool animation for at least 2.5 seconds
+    const minTimer = setTimeout(() => setMinTimePassed(true), 2500);
+    // Safety fallback: if ONNX fails, unlock the page after 5 seconds anyway
+    const fallbackTimer = setTimeout(() => setForceUnlock(true), 5000);
+
+    return () => {
+      clearTimeout(minTimer);
+      clearTimeout(fallbackTimer);
+    };
+  }, []);
+
+  const isLoading = (!modelReady || !minTimePassed) && !forceUnlock;
+
+  // Lock the scrollbar while loading
+  useEffect(() => {
+    if (isLoading) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    // Cleanup on unmount
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isLoading]);
+
   return (
     <>
-      <CanvasNCA />
+      <AnimatePresence>
+        {isLoading && <BootLoader />}
+      </AnimatePresence>
+
+      <CanvasNCA onReady={() => setModelReady(true)} />
 
       <main className="relative z-10 text-slate-200">
-        {/* ---- Section 1: The Root ---- */}
+        
         <DataDust />
+
+        {/* ---- Section 1: The Root ---- */}
         
         <section className="relative flex h-screen items-center justify-center px-6 overflow-hidden">
           
-          {/* Step 3: HUD Framing */}
           <motion.div 
             style={{ opacity: heroOpacity }}
             className="pointer-events-none absolute inset-6 z-20 hidden font-mono text-[10px] uppercase tracking-[0.3em] text-cyan-500/50 md:block"
@@ -546,12 +642,10 @@ export default function Page() {
             </div>
           </motion.div>
 
-          {/* Radial Blueprint Grid & Data Dust */}
           <motion.div 
             style={{ opacity: heroOpacity }}
             className="pointer-events-none absolute inset-0 z-0"
           >
-            
             <div 
               className="absolute inset-0"
               style={{
@@ -587,16 +681,13 @@ export default function Page() {
             </span>
             
             <div className="flex flex-col items-center">
-              {/* Mouse Outline */}
               <div className="flex h-8 w-5 justify-center rounded-full border border-cyan-500/40 p-1">
-                {/* Scrolling Wheel */}
                 <motion.div
                   animate={{ y: [0, 10, 0], opacity: [1, 0, 1] }}
                   transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
                   className="h-1.5 w-1 rounded-full bg-cyan-300 shadow-[0_0_8px_rgba(34,211,238,0.8)]"
                 />
               </div>
-              {/* Downward Energy Line */}
               <motion.div
                 animate={{ height: ["0rem", "3rem", "0rem"], opacity: [0, 1, 0] }}
                 transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
@@ -605,12 +696,12 @@ export default function Page() {
             </div>
           </motion.div>
         </section>
+
         {/* ---- Section 2: The Neural Pathways ---- */}
         <section
           ref={timelineRef}
           className="relative mx-auto flex max-w-6xl flex-col gap-y-32 pb-[25vh] pt-[10vh] md:gap-y-40"
         >
-          {/* Central spine tracing the screen center */}
           <div
             className="pointer-events-none absolute inset-y-0 left-1/2 hidden w-px -translate-x-1/2 bg-cyan-900/20 md:block"
             aria-hidden
@@ -625,7 +716,6 @@ export default function Page() {
             <NodeCard key={node.id} node={node} />
           ))}
 
-          {/* Step 1: Append the terminal contact node */}
           <ContactNode />
         </section>
       </main>

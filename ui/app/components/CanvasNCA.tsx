@@ -31,7 +31,8 @@ const ALPHA_CUTOFF = 0.12; // suppress faint halo noise
 const MODEL_URL = "/models/node_tree_thick.onnx";
 const ORT_WASM_PATH = "/ort/";
 
-type Props = { debug?: boolean };
+// 1. Add the onReady prop to the type definition
+type Props = { debug?: boolean; onReady?: () => void };
 
 const clamp255 = (v: number) => (v < 0 ? 0 : v > 255 ? 255 : Math.round(v));
 
@@ -41,7 +42,8 @@ function makeSeed(): Float32Array {
   return s;
 }
 
-export default function CanvasNCA({ debug = false }: Props) {
+// 2. Destructure the new onReady prop
+export default function CanvasNCA({ debug = false, onReady }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const hudRef = useRef<HTMLDivElement>(null);
 
@@ -289,6 +291,10 @@ export default function CanvasNCA({ debug = false }: Props) {
           outputs: s.outputNames,
         });
         draw(); // shows the seed pixel
+        
+        // 3. Fire the onReady callback to signal the bootloader to clear
+        if (onReady) onReady();
+        
       } catch (err) {
         console.error("[CanvasNCA] failed to load model", err);
       }
@@ -308,7 +314,7 @@ export default function CanvasNCA({ debug = false }: Props) {
       window.removeEventListener("mousemove", onMouseMove);
       void session?.release();
     };
-  }, [debug]);
+  }, [debug, onReady]); // 4. Add onReady to dependency array
 
   return (
     <>

@@ -41,10 +41,10 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) to initialize the WASM runtime and view the canvas locally.
 
-## 📡 Connect
-
+## Info
 * **Resume:** [View / Download Resume](./ui/public/Resume_new_final.pdf)
-* **GitHub:** [@CODEFORBLIND](https://github.com/CODEFORBLIND)
+
+## Connect
 * **LinkedIn:** [Chelsi Jain](https://www.linkedin.com/in/chelsi-jain-978211321)
 
 ---

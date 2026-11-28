@@ -1,118 +1,52 @@
+# Chelsi Jain | Interactive Developer Portfolio
 
-# Neural Cellular Automata Portfolio
+> **AI/ML Engineer • Agentic Workflows**
 
-An interactive developer portfolio built with **Next.js**, **TypeScript**, and **Tailwind CSS**, featuring a scroll-driven **Neural Cellular Automata (NCA)** background powered by **ONNX Runtime Web**.
+Welcome to the source code of my digital workspace. This repository houses my interactive developer portfolio, engineered to reflect my focus on intelligent systems, neural architectures, and agentic workflows.
+## The Neural Architecture
 
-## Overview
+Instead of a static background, this portfolio features a live **Neural Cellular Automata (NCA)** running directly in the browser.
 
-- **Scroll-Linked NCA Tree:** Growing and rewinding a 64×64, 16-channel cellular automata network (`node_tree_thick.onnx`) in sync with page scroll depth.
-- **Interactive Regeneration:** Dragging across the canvas perturbs cells in the network, triggering self-healing inference steps to reconstruct the structure.
-- **Career & Project Timeline:** Showcases education, experience, leadership, and AI/ML & agentic projects with GitHub links and active-card focus.
-- **Contact Node:** Includes one-click email copying, profile links, and resume download support.
+* **The Engine:** A custom-trained NCA model deployed entirely client-side using `onnxruntime-web` (WASM).
+* **Scroll-Driven Growth:** The neural network organically "sprouts" and grows across the screen as you scroll down the timeline.
+* **Interactive Damage & Healing:** Dragging the cursor across the canvas dynamically damages the neural pathways (a nod to penetration testing and system disruption), which the model autonomously recalculates and heals in real-time.
+* **Cinematic Boot Sequence:** Features a synchronized terminal boot loader, custom particle data dust, and a technical HUD overlay.
 
-## Project Structure
+## Tech Stack
 
-```
-nca-project/
-├── training/          # NCA model training experiments & assets
-└── ui/                # Next.js portfolio application
-    ├── app/
-    │   ├── components/
-    │   │   └── CanvasNCA.tsx
-    │   └── page.tsx
-    └── public/
-        ├── models/    # ONNX model weights (e.g., node_tree_thick.onnx)
-        └── ort/       # ONNX Runtime Web WASM assets
+* **Framework:** Next.js (App Router, Turbopack)
+* **Language:** TypeScript
+* **Styling:** Tailwind CSS (Custom neon scrollbars & layouts)
+* **Animation:** Framer Motion (Scroll tracking & variants)
+* **Machine Learning:** ONNX Runtime Web (WASM execution for `.onnx` models)
 
-```
+## Local Development
 
-## Getting Started
+The core Next.js application is isolated within the `ui/` directory.
 
-1. Navigate to the `ui` directory and install dependencies:
 ```bash
-cd ui
+# 1. Clone the repository
+git clone https://github.com/CODEFORBLIND/portfolio.git
+
+# 2. Navigate to the UI directory
+cd portfolio/ui
+
+# 3. Install dependencies
 npm install
 
-```
-
-
-2. Run the development server:
-```bash
+# 4. Initiate the local server
 npm run dev
 
 ```
 
+Open [http://localhost:3000](http://localhost:3000) to initialize the WASM runtime and view the canvas locally.
 
-3. Open [http://localhost:3000](http://localhost:3000) in your browser.
+## 📡 Connect
 
-*(Note: Place your resume PDF in `ui/public/` with the filename referenced in `ContactNode` if using the download button.)*
+* **Resume:** [View / Download Resume](./ui/public/Resume_new_final.pdf)
+* **GitHub:** [@CODEFORBLIND](https://github.com/CODEFORBLIND)
+* **LinkedIn:** [Chelsi Jain](https://www.linkedin.com/in/chelsi-jain-978211321)
 
-## Tech Stack
+---
 
-* **Framework:** Next.js, React, TypeScript
-* **Styling & Motion:** Tailwind CSS, Framer Motion
-* **Inference:** ONNX Runtime Web (WASM)
-
-```
-
-To add it to your repository from `~/nca-project`:
-
-```bash
-cat << 'EOF' > README.md
-# Neural Cellular Automata Portfolio
-
-An interactive developer portfolio built with **Next.js**, **TypeScript**, and **Tailwind CSS**, featuring a scroll-driven **Neural Cellular Automata (NCA)** background powered by **ONNX Runtime Web**.
-
-## Overview
-
-- **Scroll-Linked NCA Tree:** Growing and rewinding a 64×64, 16-channel cellular automata network (`node_tree_thick.onnx`) in sync with page scroll depth.
-- **Interactive Regeneration:** Dragging across the canvas perturbs cells in the network, triggering self-healing inference steps to reconstruct the structure.
-- **Career & Project Timeline:** Showcases education, experience, leadership, and AI/ML & agentic projects with GitHub links and active-card focus.
-- **Contact Node:** Includes one-click email copying, profile links, and resume download support.
-
-## Project Structure
-
-```text
-nca-project/
-├── training/          # NCA model training experiments & assets
-└── ui/                # Next.js portfolio application
-    ├── app/
-    │   ├── components/
-    │   │   └── CanvasNCA.tsx
-    │   └── page.tsx
-    └── public/
-        ├── models/    # ONNX model weights (e.g., node_tree_thick.onnx)
-        └── ort/       # ONNX Runtime Web WASM assets
-
-```
-
-## Getting Started
-
-1. Navigate to the `ui` directory and install dependencies:
-```bash
-cd ui
-npm install
-
-```
-
-
-2. Run the development server:
-```bash
-npm run dev
-
-```
-
-
-3. Open [http://localhost:3000](http://localhost:3000) in your browser.
-
-*(Note: Place your resume PDF in `ui/public/` with the filename referenced in `ContactNode` if using the download button.)*
-
-## Tech Stack
-
-* **Framework:** Next.js, React, TypeScript
-* **Styling & Motion:** Tailwind CSS, Framer Motion
-* **Inference:** ONNX Runtime Web (WASM)
-EOF
-git add README.md
-git commit -m "Add project README"
-git push origin main
+*SYS.INIT // v2.0.26 // STATUS: ONLINE*
